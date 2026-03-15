@@ -136,6 +136,9 @@ def load_model(model_name: str, dtype=mx.float16):
     model.load_weights(list(weights.items()))
     mx.eval(model.parameters())
 
+    # Compile the forward pass for fused operations
+    model = mx.compile(model)
+
     return model, scale
 
 
