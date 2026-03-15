@@ -2,3 +2,6 @@ weights/
 .venv/
 __pycache__/
 *.pyc
+reference/
+bench_input*.png
+results.tsv
