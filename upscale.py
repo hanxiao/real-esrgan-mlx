@@ -181,7 +181,6 @@ def upscale_image(
         output = tile_process(model, x, scale, tile_size, tile_pad)
     else:
         output = model(x)
-        mx.eval(output)
 
     # Remove mod pad
     if mod_scale is not None and (mod_pad_h > 0 or mod_pad_w > 0):
@@ -193,7 +192,7 @@ def upscale_image(
         oh, ow = output.shape[1], output.shape[2]
         output = output[:, :oh - pre_pad * scale, :ow - pre_pad * scale, :]
 
-    # Clamp and convert back
+    # Clamp and convert back - single eval at the end
     output = mx.clip(output, 0.0, 1.0)
     mx.eval(output)
     return np.array(output[0], dtype=np.float32)
