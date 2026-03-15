@@ -72,10 +72,13 @@ class ResidualDenseBlock(nn.Module):
 
     def __call__(self, x: mx.array) -> mx.array:
         x1 = nn.leaky_relu(self.conv1(x), negative_slope=0.2)
-        x2 = nn.leaky_relu(self.conv2(mx.concatenate([x, x1], axis=-1)), negative_slope=0.2)
-        x3 = nn.leaky_relu(self.conv3(mx.concatenate([x, x1, x2], axis=-1)), negative_slope=0.2)
-        x4 = nn.leaky_relu(self.conv4(mx.concatenate([x, x1, x2, x3], axis=-1)), negative_slope=0.2)
-        x5 = self.conv5(mx.concatenate([x, x1, x2, x3, x4], axis=-1))
+        cat1 = mx.concatenate([x, x1], axis=-1)
+        x2 = nn.leaky_relu(self.conv2(cat1), negative_slope=0.2)
+        cat2 = mx.concatenate([cat1, x2], axis=-1)
+        x3 = nn.leaky_relu(self.conv3(cat2), negative_slope=0.2)
+        cat3 = mx.concatenate([cat2, x3], axis=-1)
+        x4 = nn.leaky_relu(self.conv4(cat3), negative_slope=0.2)
+        x5 = self.conv5(mx.concatenate([cat3, x4], axis=-1))
         return x5 * 0.2 + x
 
 
